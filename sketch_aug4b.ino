@@ -94,15 +94,10 @@ void RandomLightsLED() {
     digitalWrite(leds[numRandomIndexLED[i]], LOW);
     delay(1000);
   }
-  tone(SPEAKER_PIN, tonesSPEKER[0]); // השמעת צליל בתדר נתון
-    delay(200);                         // המתנה של 200 מילישניות
+  tone(SPEAKER_PIN, tonesSPEKER[0]); 
+    delay(200);                         
     noTone(SPEAKER_PIN);            
-  // for (int i = 0; i <1; i++) {
-  //   tone(SPEAKER_PIN, tonesSPEKER[0]); // השמעת צליל בתדר נתון
-  //   delay(200);                         // המתנה של 200 מילישניות
-  //   noTone(SPEAKER_PIN);                // כיבוי הצליל
-  //   delay(200);                         // המתנה של 200 מילישניות
-  // }
+  
 }
 
 void david() {
