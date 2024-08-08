@@ -36,8 +36,8 @@ int numRandomIndexLED[NUMBER_OF_LEDS_RANDOM];
 
 // מצב נתון
 int currState;
-int CurrBtn;
-int LastBtn = HIGH;
+int CurrBtn[NUMBER_OF_LEDS] ;
+int LastBtn[NUMBER_OF_BTN];
 bool ledisOn[NUMBER_OF_LEDS];
 
 // משתנים לבדיקת זמן לחיצה
@@ -47,6 +47,7 @@ void setup() {
   Serial.begin(9600);  // איתחול ספיקר
   Serial.println("test");
   randomSeed(analogRead(A1));
+  
   for (int i = 0; i < NUMBER_OF_LEDS; i++) {  // איתחול לדים
     pinMode(leds[i], OUTPUT);
     digitalWrite(leds[i],LOW);
@@ -65,11 +66,11 @@ void loop() {
   switch (currState) {  // מכונת מצבים
     case startGame:  // התחלת משחק
       RandomLightsLED();
-      currState = GameWineer;
+      currState = startPlayerClick;
       break;
 
     case startPlayerClick:  // התחלת לחיצה של השחקן
-      david();
+      PreesBtnAndNewTime();
       break;
 
     case GameWineer:  // משחק ניצחון נורה ירוקה
@@ -86,7 +87,8 @@ void loop() {
 
 
 void RandomLightsLED() {
-  for (int i = 1; i < NUMBER_OF_LEDS_RANDOM; i++) {
+  for (int i = 0; i < NUMBER_OF_LEDS_RANDOM; i++) {
+    Serial.println(i);
     numRandomIndexLED[i] = random(0, NUMBER_OF_LEDS);
     Serial.println(numRandomIndexLED[i]);
     digitalWrite(leds[numRandomIndexLED[i]], HIGH);
@@ -94,35 +96,36 @@ void RandomLightsLED() {
     digitalWrite(leds[numRandomIndexLED[i]], LOW);
     delay(1000);
   }
-  tone(SPEAKER_PIN, tonesSPEKER[0]); // השמעת צליל בתדר נתון
-    delay(200);                         // המתנה של 200 מילישניות
+  tone(SPEAKER_PIN, tonesSPEKER[0]); 
+    delay(200);                         
     noTone(SPEAKER_PIN);            
-  // for (int i = 0; i <1; i++) {
-  //   tone(SPEAKER_PIN, tonesSPEKER[0]); // השמעת צליל בתדר נתון
-  //   delay(200);                         // המתנה של 200 מילישניות
-  //   noTone(SPEAKER_PIN);                // כיבוי הצליל
-  //   delay(200);                         // המתנה של 200 מילישניות
-  // }
+  
 }
 
-void david() {
+void PreesBtnAndNewTime() {
+  
+
   for (int i = 0; i < NUMBER_OF_BTN; i++) {
-    CurrBtn = digitalRead(buttons[i]);
+    CurrBtn[i] = digitalRead(buttons[i]);
 
-    if ((CurrBtn == LOW) && (LastBtn == HIGH) && (millis() - lastPressTime > 50)) {
+    if ((CurrBtn[i] == LOW) && (LastBtn[i] == HIGH) && (millis() - lastPressTime > 50)) {
       lastPressTime = millis();
-      toggleLed(i);
+      trunledON(i);
     }
-    LastBtn = CurrBtn;
+    else if ((CurrBtn[i] == HIGH) && (LastBtn[i] == LOW)) {
+      trunledOFF(i);
+      }
+    LastBtn[i] = CurrBtn[i];
+    
   }
 }
-void toggleLed(int chenel) {  // מתג
-  if (ledisOn[chenel]) {
-    trunledOFF(chenel);
-  } else {
-    trunledON(chenel);
-  }
-}
+// void toggleLed(int chenel) {  // מתג
+//   if (ledisOn[chenel]) {
+//     trunledOFF(chenel);
+//   } else {
+//     trunledON(chenel);
+//   }
+// }
 
 void trunledON(int chenel) {  // הדלקה לד
   ledisOn[chenel] = true;
